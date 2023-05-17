@@ -43,11 +43,11 @@ def mostrar_total_de_palabras(diccionario_de_palabras):
         else:
             diccionario_cantidad_por_letra[primer_letra_palabra] += 1
 
-    for letra in diccionario_cantidad_por_letra:
-        print(f"la letra {letra} tiene {diccionario_cantidad_por_letra[letra]} letras")
-    print(cantidad_palabras)
+    # for letra in diccionario_cantidad_por_letra:
+    #     print(f"la letra {letra} tiene {diccionario_cantidad_por_letra[letra]} letras")
+    # print(cantidad_palabras)
 
-         
+    return diccionario_cantidad_por_letra
 
     
 
