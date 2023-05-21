@@ -1,4 +1,4 @@
-from etapa2 import palabra_sin_tilde, crear_diccionario, mostrar_total_de_palabras
+from etapa2 import palabra_sin_tilde, crear_diccionario, total_de_palabras
 import random
 
 ACENTOS = ("á", "é", "í", "ó", "ú")
@@ -68,7 +68,7 @@ def etapa3_test():
     lista_letras = ['a', 'b', 'c', 'd', 'e', 'f' ,'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'ñ', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
     diccionario_palabras = crear_diccionario()
-    cant_por_letra = mostrar_total_de_palabras(diccionario_palabras)
+    cant_por_letra = total_de_palabras(diccionario_palabras)
     cant_por_letra = sorted(cant_por_letra.items(), key = lambda x:x[0])
 
     for i in range(0,100):
@@ -80,4 +80,4 @@ def etapa3_test():
             print(palabra[0] + ",", end="")
         print("")
 
-# etapa3_test()
+etapa3_test()
