@@ -27,12 +27,12 @@ def filtrar_palabras(palabras, cant_por_letra, letras_seleccionadas):
     lista_filtrada = []
     letras_filtradas = []
     index = 0
-    for cant in cant_por_letra:
+    for letra_cant in cant_por_letra:
         primer_letra = palabras[index][0] if palabras[index][0] not in ACENTOS else palabra_sin_tilde(palabras[index][0])
         if primer_letra in letras_seleccionadas:
-            lista_filtrada.extend(palabras[index:(index+cant[CANT])])
-            letras_filtradas.append(cant)
-        index += cant[CANT]
+            lista_filtrada.extend(palabras[index:(index+letra_cant[CANT])])
+            letras_filtradas.append(letra_cant)
+        index += letra_cant[CANT]
     return lista_filtrada, letras_filtradas
 
 def seleccionar_palabra(diccionario_palabras, letras_participantes, cant_por_letra):
@@ -59,7 +59,7 @@ def seleccionar_palabra(diccionario_palabras, letras_participantes, cant_por_let
         palabras_seleccionadas.append(palabra)
         indice += cant[CANT]
 
-    palabras_seleccionadas.sort()
+    # palabras_seleccionadas.sort()
     return palabras_seleccionadas
 
 
@@ -71,7 +71,7 @@ def etapa3_test():
     cant_por_letra = mostrar_total_de_palabras(diccionario_palabras)
     cant_por_letra = sorted(cant_por_letra.items(), key = lambda x:x[0])
 
-    for i in range(0,500):
+    for i in range(0,100):
         letras_seleccionadas = crear_lista_letras(lista_letras)
         palabras_definiciones = seleccionar_palabra(diccionario_palabras, letras_seleccionadas, cant_por_letra)
 
@@ -80,4 +80,4 @@ def etapa3_test():
             print(palabra[0] + ",", end="")
         print("")
 
-etapa3_test()
+# etapa3_test()
