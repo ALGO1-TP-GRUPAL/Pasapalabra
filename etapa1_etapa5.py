@@ -122,12 +122,30 @@ def agregar_resultado_final(resultado_final,letra,intento,palabra,resultados):
         resultado_final += f"error - Palabra Correcta: {palabra}\n"
     return resultado_final
 
-def iniciar_juego(letras,definiciones):
+def imprimir_puntuacion(aciertos,errores,puntaje_anterior=0,PUNTOS_POR_ACIERTO=10,PUNTOS_POR_ERROR=-3):
+    """ 
+    Función: imprimir_puntuacion
+    Parámetros: 
+        aciertos: es un integer que representa la cantidad de aciertos que el jugador realizó durante todo el juego
+        errores: es un integer que representa la cantidad de errores que el jugador realizó durante todo el juego
+        puntaje_anterior: es un integer que representa el puntaje acumulado de juegos anteriores. Si es la primera vez que se juega, éste vale cero.
+        PUNTOS_POR_ACIERTO: es una constante de tipo integer que representa la cantidad de puntos que se reciben por acierto (etapa 5)
+        PUNTOS_POR_ERROR: es una constante de tipo integer que representa la cantidad de puntos que se restan por error (etapa 5)
+    Salidas: -
+    Precondiciones: Se debe de haber finalizado de jugar todo un rosco
+    Postcondiciones: Imprime la puntuación final obtenida por el jugador luego de haber finalizado el rosco, con los puntos correspondientes por acierto y por error
+    """
+    puntaje_final = puntaje_anterior + (aciertos * PUNTOS_POR_ACIERTO) + (errores * PUNTOS_POR_ERROR)
+    print(f"Puntaje final: {puntaje_final}")
+    return puntaje_final
+
+def iniciar_juego(letras,definiciones,puntaje_anterior=0):
     """ 
     Función: iniciar_juego
     Parámetros: 
         letras: es una lista con las 10 letras participantes del rosco ordenadas, elegidas al azar
         definiciones: es una lista de listas en donde cada sublista contiene en la posición 0 una palabra y en la posición 1 su definición. Las palabras seleccionadas son elegidas a partir de las letras seleccionadas.
+        puntaje_anterior: es un integer que representa el puntaje acumulado de juegos anteriores. Si es la primera vez que se juega, éste vale cero.
     Salidas: 
         confirmacion: "si" si el jugador desea jugar nuevamente, "no" si el jugador desea no jugar más
     Precondiciones: Se debe haber iniciado un juego nuevo
@@ -154,8 +172,15 @@ def iniciar_juego(letras,definiciones):
         resultados,aciertos,errores = comparar_intento(intento,palabra,resultados,letra_turno_actual,aciertos,errores)
         resultado_final = agregar_resultado_final(resultado_final,letra_turno_actual,intento,palabra,resultados)
     imprimir_rosco(letras,resultados)
-    print(f"\n\n{resultado_final}")
-    print(f"Puntaje final: {aciertos}\n")
+    print(f"\n\nAciertos: {aciertos}\nErrores: {errores}")
+    print(f"\n{resultado_final}")
+    # Etapa 1 ->
+    # print(f"Puntaje final: {aciertos}\n")
+    # Etapa 5 ->
+    puntaje_final = imprimir_puntuacion(aciertos,errores,puntaje_anterior)
+    confirmacion = input("\n¿Desea jugar nuevamente? (si/no): ")
+    confirmacion = validar_confirmacion(confirmacion)
+    return confirmacion, puntaje_final
 
 def main():
     """ 
@@ -166,14 +191,14 @@ def main():
     Postcondiciones: Es la funcion principal, por acá comienza a correr el código. Inicia el juego
     Autor: Valentina Llanos Pontaut
     """
-    print("¡Bienvenido al juego Pasapalabra!\n\nA continuación le mostraremos una serie de letras participantes de las cuales deberá intentar adivinar a qué palabra se está refiriendo leyendo su definición.\nDebajo de las letras podrá observar cuáles va acertando \"a\" o cuales va errando \"e\".\n\n¡Mucha suerte!")
-    letras_participantes = ["a","c","d","g","i","l","m","p","s","v"] # Se crea esta lista en la etapa 2 de manera aleatoria
-    definiciones = [["arbol","def arbol"],["casa","def casa"],["dado","def dado"],["gato","def gato"],["isla","def isla"],["loco","def loco"],["manteca","def manteca"],["pescado","def pescado"],["sapo","def sapo"],["vaso","def vaso"]] # Se crea esta lista en la etapa 2 de manera aleatoria
-    confirmacion = iniciar_juego(letras_participantes,definiciones)
+    print("¡Bienvenido al juego Pasapalabra!\n\nA continuación le mostraremos una serie de letras participantes de las cuales deberá intentar adivinar a qué palabra se está refiriendo leyendo su definición.\nDebajo de las letras podrá observar cuáles va acertando \"a\" o cuales va errando \"e\".\nRecuerde que por cada acierto obtiene 10 puntos y por cada error se le restan 3 puntos.\n\n¡Mucha suerte!")
+    # Las listas "letras_participantes" y "definiciones" se crean en la etapa 3 de manera aleatoria
+    letras_participantes = ["a","c","d","g","i","l","m","p","s","v"] 
+    definiciones = [["arbol","def arbol"],["casa","def casa"],["dado","def dado"],["gato","def gato"],["isla","def isla"],["loco","def loco"],["manteca","def manteca"],["pescado","def pescado"],["sapo","def sapo"],["vaso","def vaso"]]
+    confirmacion,puntaje_final = iniciar_juego(letras_participantes,definiciones)
     while confirmacion == "si":
-        letras_participantes = ["b","d","e","h","j","m","n","q","t","x"] # Se crea esta lista en la etapa 2 de manera aleatoria
-        definiciones = [["barco","def barco"],["dinero","def dinero"],["estado","def estado"],["helado","def helado"],["jaula","def jaula"],["mono","def mono"],["nacer","def nacer"],["queso","def queso"],["tomate","def tomate"],["xilofon","def xilofon"]] # Se crea esta lista en la etapa 2 de manera aleatoria
-        confirmacion = iniciar_juego(letras_participantes,definiciones)
+        # Las listas "letras_participantes" y "definiciones" se crean en la etapa 3 de manera aleatoria
+        letras_participantes = ["b","d","e","h","j","m","n","q","t","x"]
+        definiciones = [["barco","def barco"],["dinero","def dinero"],["estado","def estado"],["helado","def helado"],["jaula","def jaula"],["mono","def mono"],["nacer","def nacer"],["queso","def queso"],["tomate","def tomate"],["xilofon","def xilofon"]]
+        confirmacion,puntaje_final = iniciar_juego(letras_participantes,definiciones,puntaje_final)
     print("\n¡Gracias por participar!")
-
-# Para observar los resultados de esta etapa llamar a la función main(). No se agregó en este código debido que afecta el funcionamiento de la etapa integradora
