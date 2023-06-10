@@ -16,7 +16,7 @@ def obtener_config():
     """
     Función: obtener_config
     Salida: Devuelve una lista con los valores de la configuracion
-    Autores: Valentín Marturet / Renato Villalba
+    Autores: Valentín Marturet
     """
     res = {}
     archivo = open("./configuracion.csv", "r")
