@@ -1,4 +1,4 @@
-from etapa1_etapa5 import iniciar_juego, volver_a_jugar 
+from etapa1_etapa5 import iniciar_juego
 from etapa2 import crear_diccionario, total_de_palabras
 from etapa3 import crear_lista_letras, seleccionar_palabra
 
@@ -20,7 +20,7 @@ def volver_a_jugar(confirmacion,puntaje_final,letras,diccionario_palabras,cant_p
         letras_participantes = crear_lista_letras(letras)
         definiciones = seleccionar_palabra(diccionario_palabras, letras_participantes, cant_por_letra)
         confirmacion,puntaje_final = iniciar_juego(letras_participantes,definiciones,puntaje_final)
-        
+
 def main():
     """ 
     Función: main
