@@ -12,27 +12,32 @@ def leer(archivo):
     return linea.split(',')
 
 
+
 def obtener_config():
     """
     Función: obtener_config
     Salida: Devuelve una lista con los valores de la configuracion
     Autores: Valentín Marturet
     """
-    res = {}
-    archivo = open("./configuracion.csv", "r")
-    linea = leer(archivo)
-    index = 0
-    while index < len(OPCIONES):
-        if linea[OPCION] == OPCIONES[index]:
-            res[linea[OPCION]] = linea[VALOR]
-        else:
-            res[OPCIONES[index]] = DEFAULT[index]
+    config = {}
+    try:
+        archivo = open("./configuracion.csv", "r")
         linea = leer(archivo)
-        index += 1
-    return res
+        index = 0
+        while index < len(OPCIONES):
+            if linea[OPCION] == OPCIONES[index] and linea[VALOR].isnumeric():
+                config[linea[OPCION]] = int(linea[VALOR])
+            else:
+                config[OPCIONES[index]] = DEFAULT[index]
+            linea = leer(archivo)
+            index += 1
+    except FileNotFoundError:
+        print("Error: Archivo de configuracion no encontrado, leyendo opciones por defecto.")
+        for index in range(len(OPCIONES)):
+            config[OPCIONES[index]] = DEFAULT[index]
+    return config
 
 def test():
-    print("hello")
     dicc_config = obtener_config()
     print(dicc_config)
     for clave in dicc_config:
