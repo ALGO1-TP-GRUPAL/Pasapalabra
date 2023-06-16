@@ -5,6 +5,13 @@ OPCION, VALOR = 0, 1
 
 
 def leer(archivo):
+    """
+    Función: leer
+    Parametros:
+        archivo: Recibe el archivo del cual se quiere leer una linea.
+    Salida: Devuelve una lista con todos los elementos de una linea del archivo dado.
+    Autores: Valentín Marturet
+    """
     linea = archivo.readline()
     if (not(linea)):
         linea = ""
@@ -16,7 +23,10 @@ def leer(archivo):
 def obtener_config():
     """
     Función: obtener_config
+    Parametros: -
     Salida: Devuelve una lista con los valores de la configuracion
+    Precondiciones: La configuracion deseada debe haber sido establecida antes de iniciar el juego
+    Postcondiciones: Si se cargaron los datos correctamente, la configuracion del juego es la establecida por el usuario, de lo contrario se utiliza la configuracion por defecto
     Autores: Valentín Marturet
     """
     config = {}
