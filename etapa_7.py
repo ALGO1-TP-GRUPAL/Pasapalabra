@@ -12,7 +12,7 @@ def crear_root():
     Salida: Devuelve el root necesario para la interfaz.
     '''
 
-    global root
+    # global root
     root = Tk()
 
     root.title('Pasapalabra')
@@ -37,11 +37,12 @@ def crear_frame(root):
     return frame_1
 
 
-def mensaje_de_inicio(root, frame):
+def mensaje_de_inicio(root, frame, lista_jugadores):
     '''
     Función: mensaje_de_inicio
     Parámetros: root es la raiz configurada previamente
                 frame_1 frame configurado previamente
+                lista_jugadores Lista a la que se van a agregar los jugadores logueados
     Salida: Muestra el mensaje para empezar el juego con los botones iniciar y salir
     '''
     
@@ -49,32 +50,31 @@ def mensaje_de_inicio(root, frame):
     texto_1.config(bg = '#2F4F4F', font = ('Hack', 40))
     texto_1.place(x = 100, y = 80)
 
-    boton_inicio = Button(frame, text = 'Jugar', font = ('Comic Sans', 15), command = lambda : inicio(root, frame), bg= '#778899')
+    boton_inicio = Button(frame, text = 'Jugar', font = ('Comic Sans', 15), command = lambda : login_usuarios(root, frame, lista_jugadores), bg= '#778899')
     boton_inicio.place(x = 120, y = 220, width = 100, height = 50)
 
     boton_salir = Button(frame, text = 'Salir', font = ('Comic Sans', 15), command = root.destroy, bg= '#778899')
     boton_salir.place(x = 250, y = 220, width = 100, height = 50)
     #boton_inicio.pack() O uso .place o uso pack() con los grids
 
-def inicio(root, frame):
-    '''
-    Función: inicio
-    Parámetros: root y frame creados previamente
-    Salida: Destruye la ventana con el mensaje inicial y pasa al login de usuarios
-    '''
+# def inicio(root, frame):
+#     '''
+#     Función: inicio
+#     Parámetros: root y frame creados previamente
+#     Salida: Destruye la ventana con el mensaje inicial y pasa al login de usuarios
+#     '''
 
-    frame.destroy()
-    login_usuarios(root, frame)
+#     frame.destroy()
+#     login_usuarios(root, frame)
 
-def login_usuarios(root, frame):
+def login_usuarios(root, frame, lista_jugadores):
     '''
     Función: login_usuarios
     Parámetros: root y frame creados previamente
     Salida: Mostrar la ventana para acceder un usuario o crear en caso de que no exista
     '''
 
-    global caja_usuario
-    global caja_clave
+    frame.destroy()
     
     frame_usuarios = Frame(width = 400, height = 350)
     frame_usuarios.config(bg = '#2F4F4F')
@@ -95,29 +95,24 @@ def login_usuarios(root, frame):
     caja_clave.place(x = 180, y = 180, width = 150, height = 30)
     caja_clave.config(show = '*')
 
-    boton_de_registro = Button(frame_usuarios, text = 'Registrarse', font = ('Comic Sans', 10), command = registro_nuevo, bg = '#778899')
+    boton_de_registro = Button(frame_usuarios, text = 'Registrarse', font = ('Comic Sans', 10), command = lambda : registro_nuevo(root, lista_jugadores), bg = '#778899')
     boton_de_registro.place(x = 90, y = 250, width = 100, height = 30)
 
-    boton_ingreso = Button(frame_usuarios, text = 'Ingresar', command = lambda : validar_ingreso(root), font = ('Comic Sans', 10), bg = '#778899')
+    boton_ingreso = Button(frame_usuarios, text = 'Ingresar', command = lambda : validar_ingreso(root, caja_usuario, caja_clave, lista_jugadores), font = ('Comic Sans', 10), bg = '#778899')
     boton_ingreso.place(x = 200, y = 250, width = 100, height = 30)
 
-    boton_iniciar_partida = Button(frame_usuarios, text = 'Iniciar partida', font = ('Comic Sans', 10), command = obtener_lista_jugadores, bg = '#778899')
+    boton_iniciar_partida = Button(frame_usuarios, text = 'Iniciar partida', font = ('Comic Sans', 10), command = lambda : iniciar_juego(root, lista_jugadores), bg = '#778899')
     boton_iniciar_partida.place(x = 90, y = 285, width = 100, height = 30)
 
     boton_salir = Button(frame_usuarios, text = 'Salir', font = ('Comic Sans', 10), command = root.destroy, bg = '#778899')
     boton_salir.place(x = 200, y = 285, width = 100, height = 30)
 
-def registro_nuevo():
+def registro_nuevo(root, lista_jugadores):
     '''
     Función: registro_nuevo
     Parámetros: -
     Salida: Crear un nuevo usuario con una nueva clave con sus validaciones respectivas
     '''
-
-    global registro_usuario
-    global caja_texto_usuario
-    global caja_texto_clave
-    global confirmacion_caja_nueva
 
     registro_usuario = Tk()
     registro_usuario.title('Crear nuevo usuario')
@@ -145,7 +140,7 @@ def registro_nuevo():
     confirmacion_caja_nueva = Entry(registro_usuario, textvariable = reconfirmar_clave, bg = "#2F4F4F", fg = "white", justify = "left", font = 5)
     confirmacion_caja_nueva.place(x = 50, y = 160, width = 200, height = 30)
 
-    boton_confirmar = Button(registro_usuario, text = 'Confirmar', font = ('Comic Sans', 10), command = verificar_datos, bg = '#2F4F4F')
+    boton_confirmar = Button(registro_usuario, text = 'Confirmar', font = ('Comic Sans', 10), command = lambda : verificar_datos(root, registro_usuario, caja_texto_usuario, caja_texto_clave, confirmacion_caja_nueva, lista_jugadores), bg = '#2F4F4F')
     boton_confirmar.place(x = 50, y = 200, width = 100, height = 30)
 
     boton_cancelar = Button(registro_usuario, text = 'Cancelar', font = ('Comic Sans', 10), command = registro_usuario.destroy, bg = '#2F4F4F')
@@ -153,7 +148,7 @@ def registro_nuevo():
 
     
 
-def verificar_datos():
+def verificar_datos(root, registro_usuario, caja_texto_usuario, caja_texto_clave, confirmacion_caja_nueva, lista_jugadores):
     '''
     Función: verificar_datos
     Parámetros: -
@@ -161,7 +156,7 @@ def verificar_datos():
     '''
 
     archivo_usuarios = open('usuarios.csv', 'a+', newline = '')
-    writer = csv.writer(archivo_usuarios, delimiter = ',')
+    writer = csv.writer(archivo_usuarios, delimiter = ',', skipinitialspace= True)
     
     usuario_1 = caja_texto_usuario.get()
     clave_1 = caja_texto_clave.get()
@@ -219,10 +214,15 @@ def verificar_datos():
             
         else:
             writer.writerow([usuario_1, clave_1])
-            Label(registro_usuario, bg = '#206f8b', text = 'Creación exitosa', font= ('Times', 20)).place(x = 50, y = 235)
-            caja_texto_usuario.delete(0, END)
-            caja_texto_clave.delete(0, END)
-            confirmacion_caja_nueva.delete(0, END)
+            lista_jugadores.append(usuario_1)
+            messagebox.showinfo('Registro Exitoso', 'El usuario fue registrado exitosamente.')
+            # caja_texto_usuario.delete(0, END)
+            # caja_texto_clave.delete(0, END)
+            # confirmacion_caja_nueva.delete(0, END)
+            registro_usuario.destroy()
+            if len(lista_jugadores) >= 4:
+                iniciar_juego(root, lista_jugadores)
+
 
     else:
         messagebox.showwarning('Error', 'Revisar los datos')
@@ -243,14 +243,12 @@ def obtener_linea(archivo_usuarios):
 
     return registro
 
-def validar_ingreso(root):
+def validar_ingreso(root, caja_usuario, caja_clave, lista_jugadores):
     '''
     Función: validar_ingreso
     Parámetros: root es recibido para poder eliminarlo cuando se valide el ingreso
     Salida:
     '''
-
-    global lista_jugadores
 
     archivo_usuarios = open('usuarios.csv', 'r')
     linea = obtener_linea(archivo_usuarios)
@@ -258,42 +256,50 @@ def validar_ingreso(root):
     clave_string = caja_clave.get()
     usuario, clave = linea
     valido = False
-    lista_jugadores = []
 
-    while usuario and valido == False: 
+    while usuario and valido == False and usuario not in lista_jugadores: 
 
         if nombre_string == usuario and clave_string == clave:
-            lista_jugadores.append([usuario, clave])
+            lista_jugadores.append(usuario)
             messagebox.showinfo('Acceso', 'Usuario válido')
             caja_usuario.delete(0, END)
             caja_clave.delete(0, END)
             valido = True
+            if len(lista_jugadores) >= 4:
+                iniciar_juego(root, lista_jugadores)
         
         linea = obtener_linea(archivo_usuarios)
         usuario, clave = linea
     
-
-    if not valido:
+    if usuario in lista_jugadores:
+        messagebox.showwarning('Incorrecto', 'Usuario ya ingresado')
+    elif not valido:
         messagebox.showwarning('Incorrecto', 'Usuario inválido')
 
-def obtener_lista_jugadores():
+def iniciar_juego(root, lista_jugadores):
     '''
     Función: obtener_lista_jugadores
-    Parámetros: -
+    Parámetros: lista_jugadores
     Salida: Devuelve la lista con los jugadores ordenados aleatoriamente para poder empezar el juego
     '''
+    if len(lista_jugadores):
+        messagebox.showinfo("Pasapalabra", "El juego esta por comenzar.")
+        random.shuffle(lista_jugadores)
+        root.destroy()
+    else:
+        messagebox.showwarning('Error', 'Debe haber ingresado al menos un usuario.')
 
-    jugadores = lista_jugadores.get()
-    random.shuffle(jugadores)
-
-    return print(jugadores)
 
 def main():
     
     root = crear_root()
     frame = crear_frame(root)
 
-    mensaje_de_inicio(root, frame)
+
+    lista_participantes = []
+    mensaje_de_inicio(root, frame, lista_participantes)
     root.mainloop()
+
+    print("Lista de jugadores participantes:", lista_participantes)
 
 main()
