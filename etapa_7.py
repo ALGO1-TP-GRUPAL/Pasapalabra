@@ -161,50 +161,45 @@ def verificar_datos(root, registro_usuario, caja_texto_usuario, caja_texto_clave
     usuario_1 = caja_texto_usuario.get()
     clave_1 = caja_texto_clave.get()
     clave_2 = confirmacion_caja_nueva.get()
-    usuario_valido = False
-    clave_valida = False
-
+    usuario_valido = True
+    clave_valida = True
+    numeros = 0
     mayusc = 0
     minusc = 0
-    letras = 0
-    numeros = 0
-    guion_medio = 0
     caracteres_especiales = 0
     acentos = 0
 
     letras_acentuadas = ['á', 'í', 'ú', 'ó', 'é']
     
+    # Validacion del nombre de usuario
     if 4 <= len(usuario_1) <= 20:
         for caracter in usuario_1:
-            if caracter.isalpha():
-                letras += 1
-            if caracter.isnumeric():
-                numeros += 1
-            if caracter == '-':
-                guion_medio += 1
+            if not (caracter.isalpha() or caracter.isnumeric() or caracter == '-'):
+                usuario_valido = False
+
 
     if 6 <= len(clave_1) <= 12:
         for caracter in clave_1:
             if caracter.isupper():
                 mayusc += 1
-            if caracter.islower():
+            elif caracter.islower():
                 minusc += 1
-            if caracter.isnumeric():
+            elif caracter.isnumeric():
                 numeros += 1
-            if caracter == '#' or caracter == '!':
+            elif caracter == '#' or caracter == '!':
                 caracteres_especiales += 1
-            if caracter in letras_acentuadas:
+            elif caracter in letras_acentuadas:
                 acentos += 1
+            else:
+                clave_valida = False
 
-    if mayusc > 0 and minusc > 0 and numeros > 0 and caracteres_especiales > 0 and acentos == 0:
-        clave_valida = True
+    if mayusc == 0 or minusc == 0 or numeros == 0 or caracteres_especiales == 0 or acentos != 0:
+        clave_valida = False
 
     if clave_1 != clave_2:
         clave_valida = False
         Label(registro_usuario, bg = '#206f8b', text = 'No coinciden las claves', font = ('Times', 14)).place(x = 50, y = 235)
         
-    if letras > 0 and numeros > 0 and guion_medio > 0:
-        usuario_valido = True
 
     if usuario_valido and clave_valida:
         archivo_usuarios.seek(0)
