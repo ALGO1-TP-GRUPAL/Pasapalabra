@@ -41,10 +41,12 @@ def obtener_config():
                 config[OPCIONES[index]] = DEFAULT[index]
             linea = leer(archivo)
             index += 1
+        archivo.close()
     except FileNotFoundError:
         print("Error: Archivo de configuracion no encontrado, leyendo opciones por defecto.")
         for index in range(len(OPCIONES)):
             config[OPCIONES[index]] = DEFAULT[index]
+
     return config
 
 def test():
