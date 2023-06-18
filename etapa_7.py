@@ -252,7 +252,9 @@ def validar_ingreso(root, caja_usuario, caja_clave, lista_jugadores):
     usuario, clave = linea
     valido = False
 
-    while usuario and valido == False and usuario not in lista_jugadores: 
+    
+
+    while usuario and valido == False and nombre_string not in lista_jugadores: 
 
         if nombre_string == usuario and clave_string == clave:
             lista_jugadores.append(usuario)
@@ -265,8 +267,8 @@ def validar_ingreso(root, caja_usuario, caja_clave, lista_jugadores):
         
         linea = obtener_linea(archivo_usuarios)
         usuario, clave = linea
-    
-    if usuario in lista_jugadores:
+
+    if nombre_string in lista_jugadores and not valido:
         messagebox.showwarning('Incorrecto', 'Usuario ya ingresado')
     elif not valido:
         messagebox.showwarning('Incorrecto', 'Usuario inválido')
