@@ -1,7 +1,8 @@
-from login import obtener_lista_de_jugadores
-from rosco import obtener_letras_particip, obtener_palabrasydefiniciones_particip
+import random
+from login import mensaje_de_inicio, crear_root, crear_frame
+from rosco import obtener_letras_particip, obtener_palabras_definiciones_particip
 from configuracion import obtener_config
-from palabras_y_definiciones import obtener_dicc_palabra_definicion, obtener_palabras_por_letra
+from palabras_y_definiciones import obtener_lista_palabra_definicion, obtener_palabras_por_letra
 
 def validar_confirmacion(confirmacion):
     """ 
@@ -88,6 +89,21 @@ def comparar_intento(intento,palabra,resultados,letra,jugador_nombre,jugador_ind
         print(f"Incorrecto :( La palabra correcta es: {palabra}\n")
     return resultados,puntaje_por_jugador,errores_cometidos
 
+def imprimir_turnos_jugadores(jugadores):
+    """ 
+    Función: imprimir_turnos_jugadores
+    Parámetros: 
+        jugadores: Es una lista con los nombres de los jugadores participantes ordenados aleatoriamente
+    Salidas: -
+    Precondiciones: Se deben haber logeado los participantes
+    Postcondiciones: Muestra en pantalla el turno que se le asignó a cada participante
+    Autor: Valentina Llanos Pontaut
+    """
+    print("Los turnos fueron asignados de la siguiente manera: ")
+    random.shuffle(jugadores)
+    for jugador_indice in range(1,len(jugadores)+1):
+        print(f"{jugador_indice} - {jugadores[jugador_indice-1]}")
+
 def imprimir_rosco(letras,resultados):
     """ 
     Función: imprimir_rosco
@@ -101,7 +117,7 @@ def imprimir_rosco(letras,resultados):
     """
     JUGADOR = 0
     RESULTADO = 1
-    print("")
+    print("--------------------------------------------------------------------------------------------------------------\n")
     for letra in letras:
         print(f"[{letra.upper()}]", end = "")
     print("")
@@ -117,9 +133,9 @@ def imprimir_rosco(letras,resultados):
         else:
             print("[ ]",end = "")
 
-def imprimir_jugadores(jugadores, puntaje_por_jugador):
+def imprimir_puntos_jugadores(jugadores, puntaje_por_jugador):
     """ 
-    Función: imprimir_jugadores
+    Función: imprimir_puntos_jugadores
     Parámetros: 
         jugadores: Es una lista de strings que representan el nombre de cada jugador participante tipo ["jugador1","jugador2", ... ]
         puntaje_por_jugador: Es un diccionario tipo {"jugador_1":[cant_aciertos,cant_errores], "jugador_2":[ ... , ... ], ... } donde se guardan y acumulan los aciertos y errores de cada jugador durante la partida actual
@@ -235,13 +251,13 @@ def imprimir_reporte_final(partidas_jugadas,jugadores,puntaje_por_jugador,PUNTOS
         errores = puntaje_por_jugador[jugador_nombre][ERRORES]
         print(f"{jugador_indice}. {jugador_nombre} - {aciertos * PUNTOS_ACIERTO - errores * PUNTOS_DESACIERTO} puntos")
 
-def iniciar_juego(jugadores,diccionario_palabras_definicion,palabras_por_letra,PUNTOS_ACIERTO,PUNTOS_DESACIERTO,CANT_LETRAS,MAX_PARTIDAS,errores_cometidos = 1,jugador_indice = 0,puntaje_por_jugador_anterior=0,partidas_jugadas=1):
+def iniciar_juego(jugadores,lista_palabra_definicion,palabras_por_letra,PUNTOS_ACIERTO,PUNTOS_DESACIERTO,CANT_LETRAS,MAX_PARTIDAS,errores_cometidos = 1,jugador_indice = 0,puntaje_por_jugador_anterior=0,partidas_jugadas=1):
     """ 
     Función: iniciar_juego
     Parámetros: 
         jugadores: Es una lista de strings que representan el nombre de cada jugador participante tipo ["jugador1","jugador2", ... ] 
-        diccionario_palabras_definicion: Es un diccionario tipo {"palabra1":"def palabra1", "palabra2":"def palabra2", ... } 
-        palabras_por_letra: Es un diccionario que tiene como clave cada letra del abecedario y como valor la cantidad de palabras que hay con esa letra en diccionario_palabras_definicion
+        lista_palabra_definicion: Es una lista tipo [("palabra1","def palabra1"),("palabra2","def palabra2"),( ... ), ... ]
+        palabras_por_letra: Es un diccionario que tiene como clave cada letra del abecedario y como valor la cantidad de palabras que hay con esa letra en lista_palabra_definicion
         PUNTOS_ACIERTO: Es una constante de tipo integer que representa la cantidad de puntos que se reciben por acierto (proviene de configuracion.csv)
         PUNTOS_DESACIERTO: Es una constante de tipo integer que representa la cantidad de puntos que se restan por error (proviene de configuracion.csv)
         CANT_LETRAS: Es una constante de tipo integer que representa la cantidad de letraS que van a conformar el rosco (proviene de configuracion.csv)
@@ -260,7 +276,7 @@ def iniciar_juego(jugadores,diccionario_palabras_definicion,palabras_por_letra,P
     PALABRA = 0
     DEFINICION = 1 
     letras = obtener_letras_particip(CANT_LETRAS)
-    palabras_y_definiciones = obtener_palabrasydefiniciones_particip(diccionario_palabras_definicion, letras, palabras_por_letra)
+    palabras_y_definiciones = obtener_palabras_definiciones_particip(lista_palabra_definicion, letras, palabras_por_letra)
     puntaje_por_jugador_actual = crear_dicc_puntaje_por_jugador(jugadores)
     resultados = {}
     resultado_final = ""
@@ -276,7 +292,7 @@ def iniciar_juego(jugadores,diccionario_palabras_definicion,palabras_por_letra,P
         palabra = palabras_y_definiciones[i][PALABRA]
         definicion = palabras_y_definiciones[i][DEFINICION]
         imprimir_rosco(letras,resultados)
-        imprimir_jugadores(jugadores,puntaje_por_jugador_actual)
+        imprimir_puntos_jugadores(jugadores,puntaje_por_jugador_actual)
         print(f"\n\nTurno Jugador {jugador_indice} {jugador_nombre} - letra {letra_turno_actual.upper()} - Palabra de {len(palabra)} letras")
         print(f"Definición: {definicion}")
         intento = input("Ingrese palabra: ")
@@ -284,7 +300,7 @@ def iniciar_juego(jugadores,diccionario_palabras_definicion,palabras_por_letra,P
         resultados,puntaje_por_jugador_actual,errores_cometidos = comparar_intento(intento,palabra,resultados,letra_turno_actual,jugador_nombre,jugador_indice,puntaje_por_jugador_actual)
         resultado_final = agregar_resultado_final(resultado_final,letra_turno_actual,intento,palabra,resultados,jugador_indice,jugador_nombre)
     imprimir_rosco(letras,resultados)
-    imprimir_jugadores(jugadores,puntaje_por_jugador_actual)
+    imprimir_puntos_jugadores(jugadores,puntaje_por_jugador_actual)
     print(f"\n{resultado_final}")
     puntaje_por_jugador_anterior = imprimir_puntaje_parcial(jugadores,puntaje_por_jugador_actual,puntaje_por_jugador_anterior,PUNTOS_ACIERTO,PUNTOS_DESACIERTO)
     if partidas_jugadas < MAX_PARTIDAS:
@@ -292,7 +308,7 @@ def iniciar_juego(jugadores,diccionario_palabras_definicion,palabras_por_letra,P
         confirmacion = validar_confirmacion(confirmacion)
         if confirmacion == "si":
             partidas_jugadas += 1
-            iniciar_juego(jugadores,diccionario_palabras_definicion,palabras_por_letra,PUNTOS_ACIERTO,PUNTOS_DESACIERTO,CANT_LETRAS,MAX_PARTIDAS,errores_cometidos,jugador_indice,puntaje_por_jugador_anterior,partidas_jugadas)
+            iniciar_juego(jugadores,lista_palabra_definicion,palabras_por_letra,PUNTOS_ACIERTO,PUNTOS_DESACIERTO,CANT_LETRAS,MAX_PARTIDAS,errores_cometidos,jugador_indice,puntaje_por_jugador_anterior,partidas_jugadas)
     return partidas_jugadas,puntaje_por_jugador_anterior
 
 def main():
@@ -304,20 +320,34 @@ def main():
     Postcondiciones: Es la funcion principal, por acá comienza a correr el código. Inicia el juego
     Autor: Valentina Llanos Pontaut
     """
-    print("¡Bienvenido al juego Pasapalabra!\n\nA continuación le mostraremos una serie de letras participantes de las cuales deberá intentar adivinar a qué palabra se está refiriendo leyendo su definición.\nDebajo de las letras podrá observar cuáles va acertando \"a\" o cuales va errando \"e\".\nRecuerde que por cada acierto obtiene 10 puntos y por cada error se le restan 3 puntos.\n\n¡Mucha suerte!")
+
+    # Inicialización de interfaz y login de jugadores
+    root = crear_root()
+    frame = crear_frame(root)
+    jugadores = []
+    mensaje_de_inicio(root, frame, jugadores)
+    root.mainloop()
     
-    config = obtener_config()
-    LONG_PALABRA_MIN = config["LONGITUD_PALABRA_MINIMA"]
-    CANT_LETRAS = config["CANTIDAD_LETRAS_ROSCO"]
-    MAX_PARTIDAS = config["MAXIMO_PARTIDAS"]
-    PUNTOS_ACIERTO = config["PUNTAJE_ACIERTO"]
-    PUNTOS_DESACIERTO = config["PUNTAJE_DESACIERTO"]
+    if jugadores:
+        # Lectura de configuración del juego
+        config = obtener_config()
+        LONG_PALABRA_MIN = config["LONGITUD_PALABRA_MINIMA"]
+        CANT_LETRAS = config["CANTIDAD_LETRAS_ROSCO"]
+        MAX_PARTIDAS = config["MAXIMO_PARTIDAS"]
+        PUNTOS_ACIERTO = config["PUNTAJE_ACIERTO"]
+        PUNTOS_DESACIERTO = config["PUNTAJE_DESACIERTO"]
     
-    jugadores = obtener_lista_de_jugadores() 
-    diccionario_palabras_definicion = obtener_dicc_palabra_definicion(LONG_PALABRA_MIN)
-    palabras_por_letra = obtener_palabras_por_letra(diccionario_palabras_definicion) 
-    palabras_por_letra = sorted(palabras_por_letra.items(), key = lambda x:x[0])
-    partidas_jugadas,puntaje_por_jugador_anterior = iniciar_juego(jugadores,diccionario_palabras_definicion,palabras_por_letra,PUNTOS_ACIERTO,PUNTOS_DESACIERTO,CANT_LETRAS,MAX_PARTIDAS)
-    imprimir_reporte_final(partidas_jugadas,jugadores,puntaje_por_jugador_anterior,PUNTOS_ACIERTO,PUNTOS_DESACIERTO) 
-    print("\n¡Gracias por participar!")
+        # Inicio de juego
+        ARCHIVO_PALABRAS = "palabras.txt"
+        ARCHIVO_DEFINICIONES = "definiciones.txt" 
+        print("¡Bienvenido al juego Pasapalabra!\n\nA continuación le mostraremos una serie de letras participantes de las cuales deberá intentar adivinar a qué palabra se está refiriendo leyendo su definición.\nDebajo de las letras podrá observar cuáles va acertando \"a\" o cuales va errando \"e\".")
+        print(f"Recuerde que por cada acierto obtiene {PUNTOS_ACIERTO} puntos y por cada error se le restan {PUNTOS_DESACIERTO} puntos.\n")
+        imprimir_turnos_jugadores(jugadores)
+        print("\n¡Mucha suerte!")        
+        lista_palabra_definicion = obtener_lista_palabra_definicion(ARCHIVO_PALABRAS,ARCHIVO_DEFINICIONES,LONG_PALABRA_MIN)
+        palabras_por_letra = obtener_palabras_por_letra(lista_palabra_definicion) 
+        partidas_jugadas,puntaje_por_jugador_anterior = iniciar_juego(jugadores,lista_palabra_definicion,palabras_por_letra,PUNTOS_ACIERTO,PUNTOS_DESACIERTO,CANT_LETRAS,MAX_PARTIDAS)
+        imprimir_reporte_final(partidas_jugadas,jugadores,puntaje_por_jugador_anterior,PUNTOS_ACIERTO,PUNTOS_DESACIERTO) 
+        print("\n¡Gracias por participar!")
+    
 main()
